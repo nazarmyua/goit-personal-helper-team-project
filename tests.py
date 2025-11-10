@@ -1,5 +1,5 @@
-import bot_assistant
-from address_book import AddressBook
+from src.bot_assistant import parse_input, handle_input
+from src.models import AddressBook
 
 
 def main():
@@ -7,8 +7,8 @@ def main():
 
 
 def execute(str_input, address_book):
-    command, *args = bot_assistant.parse_input(str_input)
-    bot_assistant.handle_input(address_book, command, *args)
+    command, *args = parse_input(str_input)
+    handle_input(address_book, command, *args)
 
 
 def run_tests(address_book: AddressBook) -> None:
