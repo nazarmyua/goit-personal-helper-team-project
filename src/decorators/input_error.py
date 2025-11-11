@@ -11,8 +11,10 @@ def input_error(func):
                 return "Please provide Name, old number and new number"
             if func.__name__ in ("show_birthday", "find_contact", "remove_contact"):
                 return "Please provide Name"
+            if func.__name__ == "add_note":
+                return "Please provide Name and note"
             else:
-                raise ValueError
+                raise
         except AttributeError as e:
             if func.__name__ in "show_birthday":
                 if "name" in e.args[0]:

@@ -79,6 +79,12 @@ def get_upcoming_birthdays(book: AddressBook) -> str:
 
     return to_congratulate
 
+@input_error
+def add_note(args, book: AddressBook) -> str:
+    name, note, *_ = args
+    record = book.find(name)
+    record.add_note(note)
+    return "Note added."
 
 def init_address_book() -> AddressBook:
     try:
@@ -183,6 +189,12 @@ class BotAssistant(cmd.Cmd):
 
     def help_get_upcoming(self):
         print("Get upcoming birthdays for the next 7 days")
+    
+    def do_add_note(self, arg):
+        print(add_note(arg.split(), self.address_book))
+
+    def help_add_note(self):
+        print("Add a note to a contact")
 
 
 bot_assistant = BotAssistant()
