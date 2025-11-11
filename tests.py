@@ -1,4 +1,4 @@
-from src.bot_assistant import parse_input, handle_input
+from src.bot_assistant import handle_input
 from src.models import AddressBook
 
 
@@ -7,8 +7,7 @@ def main():
 
 
 def execute(str_input, address_book):
-    command, *args = parse_input(str_input)
-    handle_input(address_book, command, *args)
+    handle_input(address_book, str_input)
 
 
 def run_tests(address_book: AddressBook) -> None:
@@ -16,10 +15,10 @@ def run_tests(address_book: AddressBook) -> None:
     execute("add Mike 1234567890", address_book)
 
     # Add him a birthday
-    execute("add-birthday Mike 05.11.1997", address_book)
+    execute("add_birthday Mike 05.11.1997", address_book)
 
     # Print his birthday
-    execute("show-birthday Mike", address_book)
+    execute("show_birthday Mike", address_book)
 
     # Add Kate
     execute("add Kate 1111111111", address_book)
@@ -28,7 +27,7 @@ def run_tests(address_book: AddressBook) -> None:
     execute("add Kate 1111111112", address_book)
 
     # Add her b-day
-    execute("add-birthday Kate 04.11.1991", address_book)
+    execute("add_birthday Kate 04.11.1991", address_book)
 
     # Add Paolinka without birthday
     execute("add Paolinka 1111111113", address_book)
@@ -57,22 +56,22 @@ def run_tests(address_book: AddressBook) -> None:
 
     execute("phone Jovani", address_book)
 
-    execute("show-birthday Jovani", address_book)
+    execute("show_birthday Jovani", address_book)
 
-    execute("show-birthday", address_book)
-    execute("show-birthday ", address_book)
+    execute("show_birthday", address_book)
+    execute("show_birthday ", address_book)
     execute("phone", address_book)
     execute("phone ", address_book)
     execute("add", address_book)
     execute("add ", address_book)
     execute("remove", address_book)
     execute("remove ", address_book)
-    execute("add-birthday ", address_book)
+    execute("add_birthday ", address_book)
 
-    execute("add-birthday Jovani", address_book)
-    execute("add-birthday Mike 20-11-1997", address_book)
-    execute("add-birthday Mike 20-11", address_book)
-    execute("add-birthday Mike ", address_book)
+    execute("add_birthday Jovani", address_book)
+    execute("add_birthday Mike 20-11-1997", address_book)
+    execute("add_birthday Mike 20-11", address_book)
+    execute("add_birthday Mike ", address_book)
 
     execute("change", address_book)
     execute("change ", address_book)
@@ -90,8 +89,8 @@ def run_tests(address_book: AddressBook) -> None:
 
     print("\n")
 
-    execute("show-birthday Nicolaos", address_book)
-    execute("show-birthday Nicolaos 20.11.1997", address_book)
+    execute("show_birthday Nicolaos", address_book)
+    execute("show_birthday Nicolaos 20.11.1997", address_book)
     execute("change Nicolaos 1231231231 3213213213", address_book)
     execute("phone Nicolaos", address_book)
     execute("remove Nicolaos", address_book)

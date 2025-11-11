@@ -2,30 +2,9 @@ from .models import AddressBook, Record
 from .decorators import input_error
 from .services import absolute_path_provider
 import pickle
-
-QUIT_COMMANDS = ["close", "exit", "quit", "q"]
-HELP_COMMANDS = ["help", "h"]
-HELLO_COMMANDS = ["hello", "hi", "hey"]
-ADD_CONTACT = ["add"]
-REMOVE_CONTACT = ["remove"]
-UPDATE_CONTACT = ["change"]
-FIND_CONTACT = ["phone"]
-ALL_CONTACTS = ["all"]
-ADD_BIRTHDAY = ["add-birthday"]
-SHOW_BIRTHDAY = ["show-birthday"]
-GET_UPCOMING_BIRTHDAYS = ["birthdays"]
+import cmd
 
 CACHE_PATH = absolute_path_provider.get_absolute_path()
-
-@input_error
-def parse_input(raw_input: str) -> tuple[str, list[str]]:
-    if raw_input == "":
-        return "", []
-
-    cmd, *args = raw_input.split()
-    cmd = cmd.strip().lower()
-
-    return cmd, *args
 
 
 @input_error
@@ -101,60 +80,6 @@ def get_upcoming_birthdays(book: AddressBook) -> str:
     return to_congratulate
 
 
-@input_error
-def handle_input(address_book, command, *args):
-    if command in QUIT_COMMANDS:
-        save_data(address_book)
-        print("Good bye!")
-        raise KeyboardInterrupt
-
-    elif command in HELLO_COMMANDS:
-        print("How can I help you?")
-
-    elif command in HELP_COMMANDS:
-        print("Here are the list of commands:"
-              f"\nQuit commands: {QUIT_COMMANDS}"
-              f"\nHelp commands: {HELP_COMMANDS}"
-              f"\nHello commands: {HELLO_COMMANDS}"
-              f"\nAdd contact: {ADD_CONTACT} Name Phone. "
-              f"\nRemove contact: {REMOVE_CONTACT} Name"
-              f"\nUpdate contact: {UPDATE_CONTACT} Name Phone. "
-              f"\nFind contact: {FIND_CONTACT} Name. "
-              f"\nShow all contacts: {ALL_CONTACTS}"
-              f"\nAdd birthday: {ADD_BIRTHDAY} Name dd.mm.yyyy "
-              f"\nShow birthday: {SHOW_BIRTHDAY} Name"
-              f"\nGet upcoming: {GET_UPCOMING_BIRTHDAYS}")
-
-    elif command in ADD_CONTACT:
-        print(add_contact(args, address_book))
-
-    elif command in REMOVE_CONTACT:
-        print(remove_contact(args, address_book))
-
-    elif command in UPDATE_CONTACT:
-        print(change_contact(args, address_book))
-
-    elif command in FIND_CONTACT:
-        print(find_contact(args, address_book))
-
-    elif command in ALL_CONTACTS:
-        print(find_all_contacts(address_book))
-
-    elif command in ADD_BIRTHDAY:
-        print(add_birthday(args, address_book))
-
-    elif command in SHOW_BIRTHDAY:
-        print(show_birthday(args, address_book))
-
-    elif command in GET_UPCOMING_BIRTHDAYS:
-        print(get_upcoming_birthdays(address_book))
-
-    else:
-        print("Invalid command. Try again, type 'help' for commands tips")
-
-    # Writing to cache file after each operation to ensure that all data is saved
-    save_data(address_book)
-
 def init_address_book() -> AddressBook:
     try:
         with open(CACHE_PATH, "rb") as f:
@@ -162,29 +87,120 @@ def init_address_book() -> AddressBook:
     except FileNotFoundError or pickle.UnpicklingError:
         return AddressBook()
 
+
 def save_data(book):
     with open(CACHE_PATH, "wb") as f:
         pickle.dump(book, f)
+
 
 def load_data():
     try:
         with open(CACHE_PATH, "rb") as f:
             return pickle.load(f)
     except FileNotFoundError:
-        return AddressBook()  # Повернення нової адресної книги, якщо файл не знайдено
+        # Повернення нової адресної книги, якщо файл не знайдено
+        return AddressBook()
+
+
+class BotAssistant(cmd.Cmd):
+    prompt = ">>> "
+    address_book = init_address_book()
+
+    def postcmd(self, stop, line):
+        save_data(self.address_book)
+        return stop
+
+    def do_hello(self, arg):
+        print("How can I help you?")
+
+    def help_hello(self):
+        print("Print greeting message")
+
+    def do_quit(self, arg):
+        save_data(self.address_book)
+        print("Good bye!")
+        return True
+
+    def help_quit(self):
+        print("Quit the program")
+
+    def do_add(self, arg):
+        print(add_contact(arg.split(), self.address_book))
+
+    def help_add(self):
+        print("Add a new contact")
+
+    def do_remove(self, arg):
+        print(remove_contact(arg.split(), self.address_book))
+
+    def help_remove(self):
+        print("Remove a contact")
+
+    def do_change(self, arg):
+        print(change_contact(arg.split(), self.address_book))
+
+    def help_change(self):
+        print("Change a contact's phone number")
+
+    def do_find(self, arg):
+        print(find_contact(arg.split(), self.address_book))
+
+    def help_find(self):
+        print("Find a contact by name")
+
+    def do_phone(self, arg):
+        self.do_find(arg)
+
+    def help_phone(self):
+        print("Find a contact by name")
+
+    def do_birthdays(self, arg):
+        print(get_upcoming_birthdays(self.address_book))
+
+    def help_birthdays(self):
+        print("Get upcoming birthdays for the next 7 days")
+
+    def do_all(self, arg):
+        print(find_all_contacts(self.address_book))
+
+    def help_all(self):
+        print("Get all contacts")
+
+    def do_add_birthday(self, arg):
+        print(add_birthday(arg.split(), self.address_book))
+
+    def help_add_birthday(self):
+        print("Add a birthday to a contact")
+
+    def do_show_birthday(self, arg):
+        print(show_birthday(arg.split(), self.address_book))
+
+    def help_show_birthday(self):
+        print("Show a birthday of a contact")
+
+    def do_get_upcoming(self, arg):
+        print(get_upcoming_birthdays(self.address_book))
+
+    def help_get_upcoming(self):
+        print("Get upcoming birthdays for the next 7 days")
+
+
+bot_assistant = BotAssistant()
+
+
+# @input_error
+def handle_input(address_book, line):
+    bot_assistant.address_book = address_book
+    bot_assistant.onecmd(line)
 
 
 def main():
-    address_book = init_address_book()
-
     print("Greetings! I'm Jarvis, your personal assistant."
           "\nHow can I help you today?"
           "\nType 'help' for more information.")
 
-    while True:
-        user_input = input(">>>")
-        command, *args = parse_input(user_input)
-        handle_input(address_book, command, *args)
+    bot_assistant.cmdloop()
+
 
 def run():
     # Proxy function to boot up Bot from outer module
