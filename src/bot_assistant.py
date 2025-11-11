@@ -12,6 +12,7 @@ UPDATE_CONTACT = ["change"]
 FIND_CONTACT = ["phone"]
 ALL_CONTACTS = ["all"]
 ADD_BIRTHDAY = ["add-birthday"]
+ADD_NOTE = ["add-note"]
 SHOW_BIRTHDAY = ["show-birthday"]
 GET_UPCOMING_BIRTHDAYS = ["birthdays"]
 
@@ -100,6 +101,12 @@ def get_upcoming_birthdays(book: AddressBook) -> str:
 
     return to_congratulate
 
+@input_error
+def add_note(args, book: AddressBook) -> str:
+    name, note, *_ = args
+    record = book.find(name)
+    record.add_note(note)
+    return "Note added."
 
 @input_error
 def handle_input(address_book, command, *args):
@@ -123,7 +130,9 @@ def handle_input(address_book, command, *args):
               f"\nShow all contacts: {ALL_CONTACTS}"
               f"\nAdd birthday: {ADD_BIRTHDAY} Name dd.mm.yyyy "
               f"\nShow birthday: {SHOW_BIRTHDAY} Name"
-              f"\nGet upcoming: {GET_UPCOMING_BIRTHDAYS}")
+              f"\nGet upcoming: {GET_UPCOMING_BIRTHDAYS}"
+              f"\nAdd note: {ADD_NOTE} Name"
+              )
 
     elif command in ADD_CONTACT:
         print(add_contact(args, address_book))
@@ -148,6 +157,9 @@ def handle_input(address_book, command, *args):
 
     elif command in GET_UPCOMING_BIRTHDAYS:
         print(get_upcoming_birthdays(address_book))
+    
+    elif command in ADD_NOTE:
+        print(add_note(args, address_book))
 
     else:
         print("Invalid command. Try again, type 'help' for commands tips")
