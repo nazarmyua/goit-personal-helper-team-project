@@ -3,6 +3,7 @@ from datetime import datetime, date, timedelta
 
 from .record import Record
 from .birthday import Birthday
+from ..constants import DATE_FORMAT
 
 
 class AddressBook(UserDict):
@@ -31,7 +32,7 @@ class AddressBook(UserDict):
             user_name = record.name
             birthday_str = record.birthday
             og_birthday_date = datetime.strptime(
-                birthday_str.__repr__(), Birthday.birthday_format
+                birthday_str.__repr__(), DATE_FORMAT
             ).date()
 
             birthday_date_this_year = date(
