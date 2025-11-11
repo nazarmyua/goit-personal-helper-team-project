@@ -1,5 +1,6 @@
 from .models import AddressBook, Record
 from .decorators import input_error
+from .services import absolute_path_provider
 import pickle
 
 QUIT_COMMANDS = ["close", "exit", "quit", "q"]
@@ -14,7 +15,7 @@ ADD_BIRTHDAY = ["add-birthday"]
 SHOW_BIRTHDAY = ["show-birthday"]
 GET_UPCOMING_BIRTHDAYS = ["birthdays"]
 
-ADDRESS_BOOK_CACHE_LOCATION = "address_book.pkl"
+CACHE_PATH = absolute_path_provider.get_absolute_path()
 
 @input_error
 def parse_input(raw_input: str) -> tuple[str, list[str]]:
@@ -156,18 +157,18 @@ def handle_input(address_book, command, *args):
 
 def init_address_book() -> AddressBook:
     try:
-        with open(ADDRESS_BOOK_CACHE_LOCATION, "rb") as f:
+        with open(CACHE_PATH, "rb") as f:
             return pickle.load(f)
     except FileNotFoundError or pickle.UnpicklingError:
         return AddressBook()
 
 def save_data(book):
-    with open(ADDRESS_BOOK_CACHE_LOCATION, "wb") as f:
+    with open(CACHE_PATH, "wb") as f:
         pickle.dump(book, f)
 
 def load_data():
     try:
-        with open(ADDRESS_BOOK_CACHE_LOCATION, "rb") as f:
+        with open(CACHE_PATH, "rb") as f:
             return pickle.load(f)
     except FileNotFoundError:
         return AddressBook()  # Повернення нової адресної книги, якщо файл не знайдено
