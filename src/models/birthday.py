@@ -1,7 +1,8 @@
 from datetime import datetime
 
 from .field import Field
-from src.constants import *
+from src.constants import DATE_FORMAT
+
 
 class Birthday(Field):
     @Field.value.setter

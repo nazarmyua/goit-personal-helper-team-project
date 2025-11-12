@@ -2,8 +2,8 @@ import unittest
 from datetime import datetime, timedelta
 
 from src.constants import DATE_FORMAT
-from src.models import *
-from src.models.birthday import Birthday
+from src.models import AddressBook
+from src.models.record import Record
 
 
 class TestBirthday(unittest.TestCase):
@@ -48,6 +48,7 @@ class TestBirthday(unittest.TestCase):
 
         birthdays = self.address_book.get_upcoming_birthdays()
         assert len(birthdays) == 1
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -2,7 +2,6 @@ from collections import UserDict
 from datetime import datetime, date, timedelta
 
 from .record import Record
-from .birthday import Birthday
 from ..constants import DATE_FORMAT
 
 
