@@ -92,6 +92,5 @@ class TestBirthday(unittest.TestCase):
         self.assertEqual(len(found_records), 0)
 
 
-
 if __name__ == "__main__":
     unittest.main()
