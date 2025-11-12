@@ -17,7 +17,7 @@ class TestBirthday(unittest.TestCase):
     def test_parsing_valid(self):
         birthday_str = datetime.now().strftime(DATE_FORMAT)
         birthday = Birthday(birthday_str)
-        self.assertEqual(birthday_str, f"{birthday}")
+        self.assertEqual(birthday_str, f"{birthday}d")
 
 
 if __name__ == "__main__":
