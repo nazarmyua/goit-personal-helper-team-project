@@ -1,0 +1,37 @@
+name: Flake8 Lint
+
+on:
+  # Triggers the workflow on push or pull request events for the 'main' branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint:
+    # The job will run on an Ubuntu runner
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      # Action to retrieve the repository code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      # Action to set up a Python environment
+      uses: actions/setup-python@v5
+      with:
+        # Specify the Python version to use for linting
+        python-version: '3.x' 
+
+    - name: Install dependencies
+      # Install flake8 (and other test/lint dependencies)
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8        
+
+    - name: Run Flake8
+      # Execute the flake8 command. You can customize the arguments.
+      run: |
+        # Use a non-zero exit code to fail the workflow if errors are found
+        flake8 . --count --max-complexity=10 --max-line-length=120 --show-source --statistics
