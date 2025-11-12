@@ -23,8 +23,8 @@ class TestBirthday(unittest.TestCase):
         record.add_phone("1234567890")
         self.address_book.add_record(record)
 
-        mike_record = self.address_book.find("Mike")
-        self.assertEqual(mike_record, record)
+        found_records = self.address_book.find("Mike")
+        self.assertEqual(len(found_records), 1)
 
     def test_remove_record(self):
         self.init_address_book()
@@ -48,6 +48,49 @@ class TestBirthday(unittest.TestCase):
 
         birthdays = self.address_book.get_upcoming_birthdays()
         assert len(birthdays) == 1
+
+    def test_find_many_records(self):
+        self.init_address_book()
+        record = Record("Mike Wazowski")
+        record.add_phone("1234567890")
+        tomorrow = datetime.now() + timedelta(days=1)
+        birthday_str = tomorrow.strftime(DATE_FORMAT)
+        record.add_birthday(birthday_str)
+
+        self.address_book.add_record(record)
+
+        record = Record("Dwight Shchrute")
+        record.add_phone("3213213211")
+        tomorrow = datetime.now() + timedelta(days=2)
+        birthday_str = tomorrow.strftime(DATE_FORMAT)
+        record.add_birthday(birthday_str)
+
+        self.address_book.add_record(record)
+
+        found_records = self.address_book.find("3")
+        self.assertEqual(len(found_records), 2)
+
+        found_records = self.address_book.find("i")
+        self.assertEqual(len(found_records), 2)
+
+        found_records = self.address_book.find("Dwi")
+        self.assertEqual(len(found_records), 1)
+
+        found_records = self.address_book.find("Mike")
+        self.assertEqual(len(found_records), 1)
+
+        found_records = self.address_book.find("Mike Wazowski")
+        self.assertEqual(len(found_records), 1)
+
+        found_records = self.address_book.find("Wazowski")
+        self.assertEqual(len(found_records), 1)
+
+        found_records = self.address_book.find("Mikelo")
+        self.assertEqual(len(found_records), 0)
+
+        found_records = self.address_book.find("")
+        self.assertEqual(len(found_records), 0)
+
 
 
 if __name__ == "__main__":
