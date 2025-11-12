@@ -195,9 +195,11 @@ def handle_input(address_book, line):
 
 
 def main():
-    print("Greetings! I'm Jarvis, your personal assistant."
-          "\nHow can I help you today?"
-          "\nType 'help' for more information.")
+    print(
+        "Greetings! I'm Jarvis, your personal assistant."
+        "\nHow can I help you today?"
+        "\nType 'help' for more information."
+    )
 
     bot_assistant.cmdloop()
 
@@ -207,5 +209,5 @@ def run():
     main()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

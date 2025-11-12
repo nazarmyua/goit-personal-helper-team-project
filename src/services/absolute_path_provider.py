@@ -1,5 +1,6 @@
 from pathlib import Path
 
+
 def get_absolute_path() -> str:
     user_dir = Path.home()
 

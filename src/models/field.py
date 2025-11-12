@@ -4,7 +4,7 @@ class Field:
 
     def __str__(self):
         return str(self.value)
-    
+
     @property
     def value(self):
         return self._value
@@ -12,5 +12,3 @@ class Field:
     @value.setter
     def value(self, value):
         self._value = value
-
-
