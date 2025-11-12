@@ -3,6 +3,7 @@ from .phone import Phone
 from .birthday import Birthday
 from .note import Note
 
+
 class Record:
     def __init__(self, name):
         self.name = Name(name)
@@ -35,9 +36,9 @@ class Record:
                 return phone
 
         return None
-    
+
     def add_note(self, note):
-        next_id = max(self.notes.keys(), default= 0) + 1
+        next_id = max(self.notes.keys(), default=0) + 1
         self.notes[next_id] = Note(note)
 
     def __str__(self):

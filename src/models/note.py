@@ -1,5 +1,6 @@
 from .field import Field
 
+
 class Note(Field):
     @Field.value.setter
     def value(self, value):
