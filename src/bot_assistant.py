@@ -38,10 +38,18 @@ def change_contact(args, book: AddressBook) -> str:
 
 
 @input_error
-def find_contact(args, book: AddressBook) -> Record | None:
-    name, *_ = args
-    record = book.find(name)
-    return record
+def find_contact(args, book: AddressBook) -> str:
+    keyword, *_ = args
+
+    records = book.find(keyword)
+
+    if len(records) == 0:
+        return f"Nothing was found by keyword '{keyword}'"
+
+    all_contacts_str = ""
+    for record in records:
+        all_contacts_str += f"\n{record}\n"
+    return all_contacts_str
 
 
 @input_error
@@ -207,9 +215,11 @@ def handle_input(address_book, line):
 
 
 def main():
-    print("Greetings! I'm Jarvis, your personal assistant."
-          "\nHow can I help you today?"
-          "\nType 'help' for more information.")
+    print(
+        "Greetings! I'm Jarvis, your personal assistant."
+        "\nHow can I help you today?"
+        "\nType 'help' for more information."
+    )
 
     bot_assistant.cmdloop()
 
@@ -219,5 +229,5 @@ def run():
     main()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
