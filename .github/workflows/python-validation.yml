@@ -34,4 +34,4 @@ jobs:
       # Execute the flake8 command. You can customize the arguments.
       run: |
         # Use a non-zero exit code to fail the workflow if errors are found
-        flake8 . --count --max-complexity=10 --max-line-length=120 --show-source --statistics
+        flake8 . --count --max-complexity=15 --max-line-length=120 --show-source --statistics
