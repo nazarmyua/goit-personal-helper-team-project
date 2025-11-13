@@ -105,6 +105,30 @@ def edit_note(args, book: AddressBook) -> str:
     return "Note edited."
 
 
+@input_error
+def remove_note(args, book: AddressBook) -> str:
+    name, id, *_ = args
+    record = book.find(name)
+    record.remove_note(int(id))
+    return "Note removed."
+
+
+@input_error
+def search_notes(args, book: AddressBook) -> str:
+    keyword, *_ = args
+    records = book.get_records_by_note_keyword(keyword)
+
+    if not records:
+        return f"No notes found containing '{keyword}'."
+
+    result_lines = []
+    for record in records:
+        result_lines.append(f"\n{record}\n")
+
+    result_text = "".join(result_lines)
+    return f"Found {len(records)} record(s) with notes containing '{keyword}':\n{result_text}"
+
+
 def init_address_book() -> AddressBook:
     try:
         with open(CACHE_PATH, "rb") as f:
@@ -214,6 +238,18 @@ class BotAssistant(cmd.Cmd):
 
     def help_add_note(self):
         print("Add a note to a contact")
+
+    def do_search_notes(self, arg):
+        print(search_notes(arg.split(), self.address_book))
+
+    def help_search_notes(self):
+        print("Search notes by keyword")
+
+    def do_remove_note(self, arg):
+        print(remove_note(arg.split(), self.address_book))
+
+    def help_remove_note(self):
+        print("Remove a note from a contact")
 
     def do_edit_note(self, arg):
         print(edit_note(arg.split(), self.address_book))

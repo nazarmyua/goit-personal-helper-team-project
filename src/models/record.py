@@ -47,6 +47,12 @@ class Record:
 
         self.notes[note_id] = Note(new_value)
 
+    def remove_note(self, note_id):
+        if note_id not in self.notes:
+            raise KeyError(f"Note with id {note_id} not found")
+
+        del self.notes[note_id]
+
     def __str__(self):
         if self.notes:
             header = "  ID | Note\n" + "-" * 20
