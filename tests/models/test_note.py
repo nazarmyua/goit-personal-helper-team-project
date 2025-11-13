@@ -1,42 +1,77 @@
 import unittest
-from src.models.note import Note
+from src.models.record import Record
 
 
-class TestNote(unittest.TestCase):
-    def test_valid_note(self):
-        note = Note("This is a valid note")
-        self.assertEqual(note.value, "This is a valid note")
+class TestAddNote(unittest.TestCase):
+    def setUp(self):
+        self.record = Record("John")
 
-    def test_note_strips_whitespace(self):
-        note = Note("  note with spaces  ")
-        self.assertEqual(note.value, "note with spaces")
+    def test_add_single_note(self):
+        self.record.add_note("first note")
+        self.assertIn(1, self.record.notes)
+        self.assertEqual(self.record.notes[1].value, "first note")
 
-    def test_empty_note_raises_error(self):
+    def test_add_multiple_notes_with_incrementing_ids(self):
+        self.record.add_note("note one")
+        self.record.add_note("note two")
+        self.record.add_note("note three")
+
+        self.assertEqual(self.record.notes[1].value, "note one")
+        self.assertEqual(self.record.notes[2].value, "note two")
+        self.assertEqual(self.record.notes[3].value, "note three")
+
+    def test_add_note_strips_whitespace(self):
+        self.record.add_note("   spaced note   ")
+        self.assertEqual(self.record.notes[1].value, "spaced note")
+
+    def test_add_empty_note_raises(self):
         with self.assertRaises(ValueError):
-            Note("")
+            self.record.add_note("")
 
-    def test_whitespace_only_note_raises_error(self):
+    def test_add_whitespace_only_note_raises(self):
         with self.assertRaises(ValueError):
-            Note("   ")
+            self.record.add_note("    ")
 
-    def test_note_with_tabs_and_newlines_raises_error(self):
+    def test_add_note_with_special_characters(self):
+        self.record.add_note("hello !@#$%^&*()")
+        self.assertEqual(self.record.notes[1].value, "hello !@#$%^&*()")
+
+
+class TestEditNote(unittest.TestCase):
+    def setUp(self):
+        self.record = Record("John")
+        self.record.add_note("first")
+        self.record.add_note("second")
+        self.record.add_note("third")
+
+    def test_edit_note_success(self):
+        self.record.edit_note(2, "updated second")
+        self.assertEqual(self.record.notes[2].value, "updated second")
+
+    def test_edit_note_strips_whitespace(self):
+        self.record.edit_note(1, "   updated text   ")
+        self.assertEqual(self.record.notes[1].value, "updated text")
+
+    def test_edit_note_invalid_id_raises_keyerror(self):
+        with self.assertRaises(KeyError):
+            self.record.edit_note(999, "doesn't matter")
+
+    def test_edit_note_empty_raises(self):
         with self.assertRaises(ValueError):
-            Note("\t\n")
+            self.record.edit_note(1, "")
 
-    def test_note_value_setter_strips_whitespace(self):
-        note = Note("initial note")
-        note.value = "  updated note  "
-        self.assertEqual(note.value, "updated note")
-
-    def test_note_value_setter_empty_raises_error(self):
-        note = Note("initial note")
+    def test_edit_note_whitespace_only_raises(self):
         with self.assertRaises(ValueError):
-            note.value = ""
+            self.record.edit_note(1, "   ")
 
-    def test_note_with_special_characters(self):
-        note = Note("Note with special chars: !@#$%^&*()")
-        self.assertEqual(note.value, "Note with special chars: !@#$%^&*()")
+    def test_edit_note_replaces_entire_note_object(self):
+        old_note_obj = self.record.notes[1]
+        self.record.edit_note(1, "new text")
+        new_note_obj = self.record.notes[1]
 
+        self.assertIsNot(old_note_obj, new_note_obj)
+        self.assertEqual(new_note_obj.value, "new text")
 
-if __name__ == "__main__":
-    unittest.main()
+    def test_edit_note_with_special_characters(self):
+        self.record.edit_note(3, "!@#$% updated")
+        self.assertEqual(self.record.notes[3].value, "!@#$% updated")

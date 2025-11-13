@@ -41,10 +41,26 @@ class Record:
         next_id = max(self.notes.keys(), default=0) + 1
         self.notes[next_id] = Note(note)
 
+    def edit_note(self, note_id, new_value):
+        if note_id not in self.notes:
+            raise KeyError(f"Note with id {note_id} not found")
+
+        self.notes[note_id] = Note(new_value)
+
     def __str__(self):
+        if self.notes:
+            header = "  ID | Note\n" + "-" * 20
+            rows = [
+                f"{note_id:>4} | {note.value}"
+                for note_id, note in self.notes.items()
+            ]
+            notes_str = "\n" + header + "\n" + "\n".join(rows)
+        else:
+            notes_str = ""
+
         return (
             f"{'Contact name:':<15} {self.name.value}\n"
             f"{'Phones:':<15} {'; '.join(p.value for p in self.phones)}\n"
             f"{'Birthday:':<15} {self.birthday}\n"
-            f"{'Notes:':<15} {'; '.join(n.value for n in self.notes.values())}"
+            f"{'Notes:':<15}{notes_str}"
         )
