@@ -13,7 +13,10 @@ class AddressBook(UserDict):
     def add_record(self, record: Record):
         self.data.update({record.name.value: record})
 
-    def find(self, keyword: str) -> list[Record]:
+    def find(self, name: str) -> Record | None:
+        return self.data.get(name, None)
+
+    def search(self, keyword: str) -> list[Record]:
         matches = []
         if keyword == "" or keyword.isspace():
             return matches
