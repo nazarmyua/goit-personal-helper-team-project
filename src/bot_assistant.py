@@ -41,7 +41,7 @@ def change_contact(args, book: AddressBook) -> str:
 def find_contact(args, book: AddressBook) -> str:
     keyword, *_ = args
 
-    records = book.find(keyword)
+    records = book.search(keyword)
 
     if len(records) == 0:
         return f"Nothing was found by keyword '{keyword}'"
