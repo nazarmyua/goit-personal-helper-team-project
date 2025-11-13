@@ -9,15 +9,28 @@ CACHE_PATH = absolute_path_provider.get_absolute_path()
 
 @input_error
 def add_contact(args, book: AddressBook):
-    name, phone, *_ = args
+    if len(args) < 2:
+        raise ValueError("Please provide Name and phone number")
+
+    name = args[0]
+    phone = args[1]
+    email = args[2] if len(args) > 2 else None
+
     record = book.find(name)
     message = "Contact updated."
     if record is None:
         record = Record(name)
         book.add_record(record)
         message = "Contact added."
+
     if phone:
+        # 🔴 Phone validation happens inside Phone(...) → ValueError if invalid
         record.add_phone(phone)
+
+    if email:
+        # 🔴 Email validation happens inside Email(...) → ValueError if invalid
+        record.add_email(email)
+
     return message
 
 
@@ -30,11 +43,22 @@ def remove_contact(args, book: AddressBook) -> str:
 
 @input_error
 def change_contact(args, book: AddressBook) -> str:
-    name, old_phone, new_phone, *_ = args
+    if len(args) < 3:
+        raise ValueError("Please provide Name, old number and new number")
+
+    name = args[0]
+    old_phone = args[1]
+    new_phone = args[2]
+    new_email = args[3] if len(args) > 3 else None
 
     record = book.find(name)
+
     record.edit_phone(old_phone, new_phone)
-    return "Phone changed."
+
+    if new_email is not None:
+        record.edit_email(new_email)
+
+    return "Contact updated."
 
 
 @input_error
