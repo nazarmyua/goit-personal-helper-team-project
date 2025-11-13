@@ -47,6 +47,12 @@ class Record:
 
         self.notes[note_id] = Note(new_value)
 
+    def remove_note(self, note_id):
+        if note_id not in self.notes:
+            raise KeyError(f"Note with id {note_id} not found")
+
+        del self.notes[note_id]
+
     def add_tags_to_note(self, note_id, tag: list[str]):
         if note_id not in self.notes:
             raise KeyError(f"Note with id {note_id} not found")

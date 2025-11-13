@@ -9,6 +9,8 @@ def input_error(func):
         "add_note": "Please provide Name and note",
         "edit_note": "Please provide Name, note index and new note",
         "add_tags_to_note": "Please provide Name, note index and at least one tag",
+        "remove_note": "Please provide Name and note index",
+        "search_notes": "Please provide keyword to search",
     }
 
     not_exist_functions = {
