@@ -1,9 +1,8 @@
 from collections import UserDict
 from datetime import datetime, date, timedelta
-import re
 
 from .record import Record
-from ..constants import DATE_FORMAT, REGEX_DATE_FORMAT, REGEX_SHORT_DATE_FORMAT
+from ..constants import DATE_FORMAT
 
 
 class AddressBook(UserDict):
@@ -13,33 +12,8 @@ class AddressBook(UserDict):
     def add_record(self, record: Record):
         self.data.update({record.name.value: record})
 
-    def find(self, keyword: str) -> list[Record]:
-        matches = []
-        if keyword == "" or keyword.isspace():
-            return matches
-
-        # Searching by birthday date
-        if (re.match(REGEX_DATE_FORMAT, keyword)
-                or re.match(REGEX_SHORT_DATE_FORMAT, keyword)):
-            for record in self.data.values():
-                if (record.birthday is not None and
-                        re.search(keyword, record.birthday.__str__()) is not None):
-                    matches.append(record)
-            return matches
-
-        if keyword.isnumeric():
-            # Searching for phone number
-            for record in self.data.values():
-                for phone_number in record.phones:
-                    if re.search(keyword, phone_number.value) is not None:
-                        matches.append(record)
-        else:
-            # Searching for name
-            for record in self.data.values():
-                if re.search(keyword.lower(), record.name.value.lower()) is not None:
-                    matches.append(record)
-
-        return matches
+    def find(self, name: str) -> Record | None:
+        return self.get(name, None)
 
     def delete(self, name):
         target_record = self.find(name)

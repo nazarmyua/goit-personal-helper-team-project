@@ -38,18 +38,10 @@ def change_contact(args, book: AddressBook) -> str:
 
 
 @input_error
-def find_contact(args, book: AddressBook) -> str:
-    keyword, *_ = args
-
-    records = book.find(keyword)
-
-    if len(records) == 0:
-        return f"Nothing was found by keyword '{keyword}'"
-
-    all_contacts_str = ""
-    for record in records:
-        all_contacts_str += f"\n{record}\n"
-    return all_contacts_str
+def find_contact(args, book: AddressBook) -> Record | None:
+    name, *_ = args
+    record = book.find(name)
+    return record
 
 
 @input_error
