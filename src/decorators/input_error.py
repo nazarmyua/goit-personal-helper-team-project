@@ -8,6 +8,7 @@ def input_error(func):
         "remove_contact": "Please provide Name",
         "add_note": "Please provide Name and note",
         "edit_note": "Please provide Name, note index and new note",
+        "add_tags_to_note": "Please provide Name, note index and at least one tag",
     }
 
     not_exist_functions = {
@@ -20,6 +21,8 @@ def input_error(func):
     def inner(*args, **kwargs):
         try:
             return func(*args, **kwargs)
+        except KeyError:
+            return "Record with this Id does not exist"
 
         except ValueError:
             return messages.get(func.__name__, "Invalid input")
