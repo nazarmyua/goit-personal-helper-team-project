@@ -9,15 +9,26 @@ CACHE_PATH = absolute_path_provider.get_absolute_path()
 
 @input_error
 def add_contact(args, book: AddressBook):
-    name, phone, *_ = args
+    if len(args) < 2:
+        raise ValueError("Please provide Name and phone number")
+
+    name = args[0]
+    phone = args[1]
+    email = args[2] if len(args) > 2 else None
+
     record = book.find(name)
     message = "Contact updated."
     if record is None:
         record = Record(name)
         book.add_record(record)
         message = "Contact added."
+
     if phone:
         record.add_phone(phone)
+
+    if email:
+        record.add_email(email)
+
     return message
 
 
@@ -30,11 +41,22 @@ def remove_contact(args, book: AddressBook) -> str:
 
 @input_error
 def change_contact(args, book: AddressBook) -> str:
-    name, old_phone, new_phone, *_ = args
+    if len(args) < 3:
+        raise ValueError("Please provide Name, old number and new number")
+
+    name = args[0]
+    old_phone = args[1]
+    new_phone = args[2]
+    new_email = args[3] if len(args) > 3 else None
 
     record = book.find(name)
+
     record.edit_phone(old_phone, new_phone)
-    return "Phone changed."
+
+    if new_email is not None:
+        record.edit_email(new_email)
+
+    return "Contact updated."
 
 
 @input_error
@@ -103,6 +125,27 @@ def edit_note(args, book: AddressBook) -> str:
     record = book.find(name)
     record.edit_note(int(id), new_note)
     return "Note edited."
+
+
+@input_error
+def remove_note(args, book: AddressBook) -> str:
+    name, id, *_ = args
+    record = book.find(name)
+    record.remove_note(int(id))
+    return "Note removed."
+
+
+@input_error
+def search_notes(args, book: AddressBook) -> str:
+    keyword, *_ = args
+    records = []
+    records = book.get_records_by_note_keyword(keyword)
+    if not records:
+        return f"No notes found containing '{keyword}'."
+    for record in records:
+        print(f"\n{record}\n")
+
+    return f"Found {len(records)} record(s) with notes containing '{keyword}'."
 
 
 def init_address_book() -> AddressBook:
@@ -214,6 +257,18 @@ class BotAssistant(cmd.Cmd):
 
     def help_add_note(self):
         print("Add a note to a contact")
+
+    def do_search_notes(self, arg):
+        print(search_notes(arg.split(), self.address_book))
+
+    def help_search_notes(self):
+        print("Search notes by keyword")
+
+    def do_remove_note(self, arg):
+        print(remove_note(arg.split(), self.address_book))
+
+    def help_remove_note(self):
+        print("Remove a note from a contact")
 
     def do_edit_note(self, arg):
         print(edit_note(arg.split(), self.address_book))
