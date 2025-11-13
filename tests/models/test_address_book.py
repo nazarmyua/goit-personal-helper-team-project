@@ -23,7 +23,7 @@ class TestBirthday(unittest.TestCase):
         record.add_phone("1234567890")
         self.address_book.add_record(record)
 
-        found_records = self.address_book.find("Mike")
+        found_records = self.address_book.search("Mike")
         self.assertEqual(len(found_records), 1)
 
     def test_remove_record(self):
@@ -67,28 +67,28 @@ class TestBirthday(unittest.TestCase):
 
         self.address_book.add_record(record)
 
-        found_records = self.address_book.find("3")
+        found_records = self.address_book.search("3")
         self.assertEqual(len(found_records), 2)
 
-        found_records = self.address_book.find("i")
+        found_records = self.address_book.search("i")
         self.assertEqual(len(found_records), 2)
 
-        found_records = self.address_book.find("Dwi")
+        found_records = self.address_book.search("Dwi")
         self.assertEqual(len(found_records), 1)
 
-        found_records = self.address_book.find("Mike")
+        found_records = self.address_book.search("Mike")
         self.assertEqual(len(found_records), 1)
 
-        found_records = self.address_book.find("Mike Wazowski")
+        found_records = self.address_book.search("Mike Wazowski")
         self.assertEqual(len(found_records), 1)
 
-        found_records = self.address_book.find("Wazowski")
+        found_records = self.address_book.search("Wazowski")
         self.assertEqual(len(found_records), 1)
 
-        found_records = self.address_book.find("Mikelo")
+        found_records = self.address_book.search("Mikelo")
         self.assertEqual(len(found_records), 0)
 
-        found_records = self.address_book.find("")
+        found_records = self.address_book.search("")
         self.assertEqual(len(found_records), 0)
 
 
