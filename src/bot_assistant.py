@@ -116,14 +116,17 @@ def remove_note(args, book: AddressBook) -> str:
 @input_error
 def search_notes(args, book: AddressBook) -> str:
     keyword, *_ = args
-    records = []
     records = book.get_records_by_note_keyword(keyword)
+
     if not records:
         return f"No notes found containing '{keyword}'."
-    for record in records:
-        print(f"\n{record}\n")
 
-    return f"Found {len(records)} record(s) with notes containing '{keyword}'."
+    result_lines = []
+    for record in records:
+        result_lines.append(f"\n{record}\n")
+
+    result_text = "".join(result_lines)
+    return f"Found {len(records)} record(s) with notes containing '{keyword}':\n{result_text}"
 
 
 def init_address_book() -> AddressBook:
