@@ -75,3 +75,35 @@ class TestEditNote(unittest.TestCase):
     def test_edit_note_with_special_characters(self):
         self.record.edit_note(3, "!@#$% updated")
         self.assertEqual(self.record.notes[3].value, "!@#$% updated")
+
+
+class TestRemoveNote(unittest.TestCase):
+    def setUp(self):
+        self.record = Record("John")
+        self.record.add_note("first")
+        self.record.add_note("second")
+        self.record.add_note("third")
+
+    def test_remove_note_success(self):
+        self.record.remove_note(2)
+        self.assertNotIn(2, self.record.notes)
+
+    def test_remove_note_reduces_count(self):
+        initial_count = len(self.record.notes)
+        self.record.remove_note(1)
+        self.assertEqual(len(self.record.notes), initial_count - 1)
+
+    def test_remove_note_invalid_id_raises_keyerror(self):
+        with self.assertRaises(KeyError):
+            self.record.remove_note(999)
+
+    def test_remove_note_only_target_removed(self):
+        self.record.remove_note(2)
+        self.assertIn(1, self.record.notes)
+        self.assertIn(3, self.record.notes)
+
+    def test_remove_all_notes_one_by_one(self):
+        self.record.remove_note(1)
+        self.record.remove_note(2)
+        self.record.remove_note(3)
+        self.assertEqual(len(self.record.notes), 0)

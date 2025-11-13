@@ -8,6 +8,8 @@ def input_error(func):
         "remove_contact": "Please provide Name",
         "add_note": "Please provide Name and note",
         "edit_note": "Please provide Name, note index and new note",
+        "remove_note": "Please provide Name and note index",
+        "search_notes": "Please provide keyword to search",
     }
 
     not_exist_functions = {
