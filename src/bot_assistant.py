@@ -88,6 +88,23 @@ def get_upcoming_birthdays(book: AddressBook) -> str:
     return to_congratulate
 
 
+@input_error
+def add_note(args, book: AddressBook) -> str:
+    name, *note_parts = args
+    note = " ".join(note_parts)
+    book.find(name).add_note(note)
+    return "Note added."
+
+
+@input_error
+def edit_note(args, book: AddressBook) -> str:
+    name, id, *note_parts = args
+    new_note = " ".join(note_parts)
+    record = book.find(name)
+    record.edit_note(int(id), new_note)
+    return "Note edited."
+
+
 def init_address_book() -> AddressBook:
     try:
         with open(CACHE_PATH, "rb") as f:
@@ -191,6 +208,18 @@ class BotAssistant(cmd.Cmd):
 
     def help_get_upcoming(self):
         print("Get upcoming birthdays for the next 7 days")
+
+    def do_add_note(self, arg):
+        print(add_note(arg.split(), self.address_book))
+
+    def help_add_note(self):
+        print("Add a note to a contact")
+
+    def do_edit_note(self, arg):
+        print(edit_note(arg.split(), self.address_book))
+
+    def help_edit_note(self):
+        print("Edit a note of a contact")
 
 
 bot_assistant = BotAssistant()
