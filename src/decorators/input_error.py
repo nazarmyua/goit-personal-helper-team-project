@@ -1,3 +1,6 @@
+from src.utils.logger import error, warning
+
+
 def _handle_key_error(func_name: str, error: KeyError, not_exist_functions: set) -> str:
     if func_name in {"edit_note", "remove_note", "add_tags_to_note"} and error.args:
         return str(error)
@@ -55,12 +58,12 @@ def input_error(func):
             return func(*args, **kwargs)
 
         except (IndexError, TypeError):
-            return messages.get(func.__name__, "Not enough arguments")
+            return warning(messages.get(func.__name__, "Not enough arguments"))
 
         except ValueError as e:
             if e.args:
-                return str(e)
-            return "Invalid value"
+                return error(str(e))
+            return error("Invalid value")
 
         except KeyError as e:
             return _handle_key_error(func.__name__, e, not_exist_functions)
