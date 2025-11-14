@@ -138,14 +138,43 @@ def remove_note(args, book: AddressBook) -> str:
 @input_error
 def search_notes(args, book: AddressBook) -> str:
     keyword, *_ = args
-    records = []
     records = book.get_records_by_note_keyword(keyword)
+
     if not records:
         return f"No notes found containing '{keyword}'."
-    for record in records:
-        print(f"\n{record}\n")
 
-    return f"Found {len(records)} record(s) with notes containing '{keyword}'."
+    result_lines = []
+    for record in records:
+        result_lines.append(f"\n{record}\n")
+
+    result_text = "".join(result_lines)
+    return f"Found {len(records)} record(s) with notes containing '{keyword}':\n{result_text}"
+
+
+@input_error
+def add_tags_to_note(args, book: AddressBook) -> str:
+    name, id, *tags = args
+    record = book.find(name)
+    record.add_tags_to_note(int(id), tags)
+    return "Tags added to note."
+
+
+@input_error
+def remove_tag_from_note(args, book: AddressBook) -> str:
+    name, id, tag = args
+    record = book.find(name)
+    record.remove_tag_from_note(int(id), tag)
+    return "Tag removed from note."
+
+
+@input_error
+def get_notes_by_tag(args, book: AddressBook) -> str:
+    name, tag = args
+    record = book.find(name)
+    notes_str = record.find_note_by_tag(tag)
+    if not notes_str:
+        return f"No notes found with tag '{tag}'"
+    return notes_str
 
 
 def init_address_book() -> AddressBook:
@@ -275,6 +304,24 @@ class BotAssistant(cmd.Cmd):
 
     def help_edit_note(self):
         print("Edit a note of a contact")
+
+    def do_add_tags_to_note(self, arg):
+        print(add_tags_to_note(arg.split(), self.address_book))
+
+    def help_add_tags_to_note(self):
+        print("Add tags to a note of a contact")
+
+    def do_remove_tag_from_note(self, arg):
+        print(remove_tag_from_note(arg.split(), self.address_book))
+
+    def help_remove_tag_from_note(self):
+        print("Remove a tag from a note of a contact")
+
+    def do_get_notes_by_tag(self, arg):
+        print(get_notes_by_tag(arg.split(), self.address_book))
+
+    def help_get_notes_by_tag(self):
+        print("Get notes by tag of a contact")
 
 
 bot_assistant = BotAssistant()

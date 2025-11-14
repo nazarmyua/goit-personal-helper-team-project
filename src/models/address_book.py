@@ -1,6 +1,7 @@
 from collections import UserDict
 from datetime import datetime, date, timedelta
 import re
+import copy
 
 from .record import Record
 from ..constants import DATE_FORMAT, REGEX_DATE_FORMAT, REGEX_SHORT_DATE_FORMAT
@@ -88,3 +89,22 @@ class AddressBook(UserDict):
                 )
 
         return birthdays
+
+    def get_records_by_note_keyword(self, keyword: str) -> list[Record]:
+        matches = []
+        keyword = keyword.strip()
+        if not keyword:
+            return matches
+
+        for record in self.data.values():
+            matching_notes = {
+                note_id: note
+                for note_id, note in record.notes.items()
+                if keyword.lower() in note.value.lower()
+            }
+            if matching_notes:
+                filtered_record = copy.copy(record)
+                filtered_record.notes = matching_notes
+                matches.append(filtered_record)
+
+        return matches

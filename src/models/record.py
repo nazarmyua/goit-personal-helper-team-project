@@ -61,20 +61,48 @@ class Record:
 
         del self.notes[note_id]
 
-    def __str__(self):
-        if self.notes:
-            header = "  ID | Note\n" + "-" * 20
-            rows = [
-                f"{note_id:>4} | {note.value}" for note_id, note in self.notes.items()
-            ]
-            notes_str = "\n" + header + "\n" + "\n".join(rows)
-        else:
-            notes_str = ""
+    def add_tags_to_note(self, note_id, tag: list[str]):
+        if note_id not in self.notes:
+            raise KeyError(f"Note with id {note_id} not found")
+
+        self.notes[note_id].add_tags(tag)
+
+    def remove_tag_from_note(self, note_id, tag: str):
+        if note_id not in self.notes:
+            raise KeyError(f"Note with id {note_id} not found")
+
+        self.notes[note_id].remove_tag(tag)
+
+    def find_note_by_tag(self, tag: str) -> {Note}:
+        matched_notes = {}
+        for note_id, note in self.notes.items():
+            for note_tag in note.get_tags():
+                if note_tag.value == tag:
+                    matched_notes[note_id] = note
+        return self.show_info(matched_notes)
+
+    def get_formatered_notes(self, notes) -> str:
+        if not notes:
+            return ""
+
+        header = "  ID | Note" + " " * 40 + " | Tags\n"
+        rows = [
+            f"{note_id:>4} | {note.value:<44} | {'; '.join(p.value for p in note.get_tags())}"
+            for note_id, note in notes.items()
+        ]
+        return "\n" + header + "\n" + "\n".join(rows)
+
+    def show_info(self, notes) -> str:
+        notes_str = self.get_formatered_notes(notes)
 
         return (
+            "\n"
             f"{'Contact name:':<15} {self.name.value}\n"
             f"{'Phones:':<15} {'; '.join(p.value for p in self.phones)}\n"
             f"{'Email:':<15} {self.email if self.email else ''}\n"
             f"{'Birthday:':<15} {self.birthday}\n"
             f"{'Notes:':<15}{notes_str}"
         )
+
+    def __str__(self):
+        return self.show_info(self.notes)
