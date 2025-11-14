@@ -54,27 +54,22 @@ def input_error(func):
         try:
             return func(*args, **kwargs)
 
-        # Not enough arguments / wrong call signature
         except (IndexError, TypeError):
             return messages.get(func.__name__, "Not enough arguments")
 
-        # Phone/email/date/etc validation; show exact message
         except ValueError as e:
             if e.args:
                 return str(e)
             return "Invalid value"
 
-        # Contact/note id errors
         except KeyError as e:
             return _handle_key_error(func.__name__, e, not_exist_functions)
 
-        # Missing attributes on contact/record
         except AttributeError as e:
             msg = _handle_attribute_error(func.__name__, e, not_exist_functions)
             if msg is not None:
                 return msg
 
-        # Graceful exit on Ctrl+C
         except KeyboardInterrupt:
             quit()
 
