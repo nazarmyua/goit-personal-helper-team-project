@@ -2,7 +2,7 @@ from .models import AddressBook, Record
 from .decorators import input_error
 from .services import absolute_path_provider
 import pickle
-import cmd
+from cmd import Cmd
 
 CACHE_PATH = absolute_path_provider.get_absolute_path()
 
@@ -177,7 +177,7 @@ def load_data():
         return AddressBook()
 
 
-class BotAssistant(cmd.Cmd):
+class BotAssistant(Cmd):
     prompt = ">>> "
     address_book = init_address_book()
 
@@ -302,15 +302,6 @@ class BotAssistant(cmd.Cmd):
         print("Get notes by tag of a contact")
 
 
-bot_assistant = BotAssistant()
-
-
-# @input_error
-def handle_input(address_book, line):
-    bot_assistant.address_book = address_book
-    bot_assistant.onecmd(line)
-
-
 def main():
     print(
         "Greetings! I'm Jarvis, your personal assistant."
@@ -318,7 +309,7 @@ def main():
         "\nType 'help' for more information."
     )
 
-    bot_assistant.cmdloop()
+    BotAssistant().cmdloop()
 
 
 def run():
