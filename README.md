@@ -92,6 +92,9 @@ If you installed as a package and want to remove it:
 pip uninstall goit-personal-helper
 ```
 
+### Troubleshoot
+If 'pip' is not working for you, try to run 'pip3'
+
 ---
 
 ## Quick Start
