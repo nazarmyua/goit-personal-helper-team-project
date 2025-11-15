@@ -2,6 +2,7 @@ from .name import Name
 from .phone import Phone
 from .birthday import Birthday
 from .note import Note
+from .email import Email
 
 
 class Record:
@@ -10,6 +11,7 @@ class Record:
         self.phones = []
         self.birthday = None
         self.notes = {}
+        self.email = None
 
     def add_phone(self, phone: str):
         match_phone = self.find_phone(phone)
@@ -36,6 +38,12 @@ class Record:
                 return phone
 
         return None
+
+    def add_email(self, email: str):
+        self.email = Email(email)
+
+    def edit_email(self, new_email: str):
+        self.email = Email(new_email)
 
     def add_note(self, note):
         next_id = max(self.notes.keys(), default=0) + 1
@@ -91,6 +99,7 @@ class Record:
             "\n"
             f"{'Contact name:':<15} {self.name.value}\n"
             f"{'Phones:':<15} {'; '.join(p.value for p in self.phones)}\n"
+            f"{'Email:':<15} {self.email if self.email else ''}\n"
             f"{'Birthday:':<15} {self.birthday}\n"
             f"{'Notes:':<15}{notes_str}"
         )

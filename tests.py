@@ -12,7 +12,7 @@ def execute(str_input, address_book):
 
 def run_tests(address_book: AddressBook) -> None:
     # Add Mike
-    execute("add Mike 1234567890", address_book)
+    execute("add Mike 1234567890 fakemail1@gmail.com", address_book)
 
     # Add him a birthday
     execute("add_birthday Mike 05.11.1997", address_book)
@@ -21,7 +21,7 @@ def run_tests(address_book: AddressBook) -> None:
     execute("show_birthday Mike", address_book)
 
     # Add Kate
-    execute("add Kate 1111111111", address_book)
+    execute("add Kate +1111111111 fakemail2@gmail.com", address_book)
 
     # Add her extra number
     execute("add Kate 1111111112", address_book)
@@ -30,7 +30,7 @@ def run_tests(address_book: AddressBook) -> None:
     execute("add_birthday Kate 04.11.1991", address_book)
 
     # Add Paolinka without birthday
-    execute("add Paolinka 1111111113", address_book)
+    execute("add Paolinka 1111111113 fakemail3@gmail.com", address_book)
 
     # Print all records
     execute("all", address_book)
@@ -42,7 +42,7 @@ def run_tests(address_book: AddressBook) -> None:
     execute("birthdays", address_book)
 
     # Add and remove Jovani, check that he is removed
-    execute("add Jovani 1111111112", address_book)
+    execute("add Jovani 1111111112 fakemail4@gmail.com", address_book)
     execute("remove Jovani", address_book)
     execute("all", address_book)
 

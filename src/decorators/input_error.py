@@ -1,3 +1,32 @@
+from src.utils.logger import error, warning
+
+
+def _handle_key_error(func_name: str, error: KeyError, not_exist_functions: set) -> str:
+    if func_name in {"edit_note", "remove_note", "add_tags_to_note"} and error.args:
+        return str(error)
+
+    if func_name in not_exist_functions:
+        return "This contact does not exist"
+
+    return "Record with this Id does not exist"
+
+
+def _handle_attribute_error(
+    func_name: str, error: AttributeError, not_exist_functions: set
+) -> str | None:
+    if func_name == "show_birthday":
+        msg = str(error)
+        if "name" in msg:
+            return "This contact does not exist"
+        if "birthday" in msg:
+            return "This contact does not have a birthday record"
+
+    if func_name in not_exist_functions:
+        return "This contact does not exist"
+
+    return None
+
+
 def input_error(func):
     messages = {
         "add_contact": "Please provide Name and phone number",
@@ -17,27 +46,32 @@ def input_error(func):
         "show_birthday",
         "find_contact",
         "remove_contact",
-        "change_contact",
+        "add_note",
+        "edit_note",
+        "remove_note",
+        "search_notes",
+        "add_tags_to_note",
     }
 
     def inner(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except KeyError:
-            return "Record with this Id does not exist"
 
-        except ValueError:
-            return messages.get(func.__name__, "Invalid input")
+        except (IndexError, TypeError):
+            return warning(messages.get(func.__name__, "Not enough arguments"))
+
+        except ValueError as e:
+            if e.args:
+                return error(str(e))
+            return error("Invalid value")
+
+        except KeyError as e:
+            return _handle_key_error(func.__name__, e, not_exist_functions)
 
         except AttributeError as e:
-            if func.__name__ == "show_birthday":
-                if "name" in str(e):
-                    return "This contact does not exist"
-                if "birthday" in str(e):
-                    return "This contact does not have a birthday record"
-
-            if func.__name__ in not_exist_functions:
-                return "This contact does not exist"
+            msg = _handle_attribute_error(func.__name__, e, not_exist_functions)
+            if msg is not None:
+                return msg
 
         except KeyboardInterrupt:
             quit()
