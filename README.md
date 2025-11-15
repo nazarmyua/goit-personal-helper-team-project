@@ -42,21 +42,58 @@ A command-line personal assistant for managing contacts, birthdays, and notes wi
 ## Installation
 
 ### Prerequisites
-- Python 3.10 or higher
+- Python 3.8 or higher
+- pip (Python package installer)
 
-### Steps
+### Method 1: Install as a Package (Recommended)
+
+This method installs Jarvis as a system-wide command, allowing you to run it from anywhere:
 
 ```bash
 # Clone repository
 git clone https://github.com/nazarmyua/goit-personal-helper-team-project.git
 cd goit-personal-helper-team-project
 
-# Install dependencies (if any in requirements.txt)
-pip install -r requirements.txt
+# Install from the project directory
+pip install .
+```
 
-# Run application
+After installation, you can run Jarvis from anywhere using:
+
+```bash
+jarvis
+```
+
+**Benefits:**
+- Run `jarvis` from any directory
+- No need to navigate to project folder
+- Works system-wide after installation
+
+### Method 2: Run Directly (Development)
+
+If you prefer to run it directly without installation:
+
+```bash
+# Clone repository
+git clone https://github.com/nazarmyua/goit-personal-helper-team-project.git
+cd goit-personal-helper-team-project
+
+# Run directly
 python main.py
 ```
+
+**Note:** This method requires you to be in the project directory.
+
+### Uninstalling
+
+If you installed as a package and want to remove it:
+
+```bash
+pip uninstall goit-personal-helper
+```
+
+### Troubleshoot
+If 'pip' is not working for you, try to run 'pip3'
 
 ---
 
@@ -64,11 +101,18 @@ python main.py
 
 ### Starting the Bot
 
+**If installed as a package (Method 1):**
+```bash
+jarvis
+```
+
+**If running directly (Method 2):**
 ```bash
 python main.py
 ```
 
-Output:
+Both methods will start the interactive interface with the following output:
+
 ```
 Greetings! I'm Jarvis, your personal assistant.
 How can I help you today?
