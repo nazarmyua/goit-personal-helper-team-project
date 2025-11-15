@@ -8,6 +8,9 @@ version = "1.0.0"
 description = "Jarvis - A command-line personal assistant bot for managing contacts, birthdays, and notes"
 readme = "README.md"
 requires-python = ">=3.8"
+dependencies = [
+    "colorama>=0.4.6",
+]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: End Users/Desktop",
