@@ -16,7 +16,9 @@ def add_contact(args, book: AddressBook):
     if len(args) < 2:
         raise ValueError(error("Please provide Name and phone number"))
 
-    name, phone, email, *_ = args
+    name = args[0]
+    phone = args[1]
+    email = args[2] if len(args) > 2 else None
 
     record = book.find(name)
     message = success(f"Contact for {name} is updated.")
@@ -46,7 +48,10 @@ def change_contact(args, book: AddressBook) -> str:
     if len(args) < 3:
         raise ValueError(error("Please provide Name, old number and new number"))
 
-    name, old_phone, new_phone, new_email, *_ = args
+    name = args[0]
+    old_phone = args[1]
+    new_phone = args[2]
+    new_email = args[3] if len(args) > 3 else None
 
     record = book.find(name)
 
