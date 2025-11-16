@@ -3,8 +3,8 @@ from datetime import datetime, date, timedelta
 import re
 import copy
 
-from .record import Record
-from ..constants import DATE_FORMAT, REGEX_DATE_FORMAT, REGEX_SHORT_DATE_FORMAT
+from src.models.record import Record
+from src.constants import DATE_FORMAT, REGEX_DATE_FORMAT, REGEX_SHORT_DATE_FORMAT
 
 
 class AddressBook(UserDict):
@@ -23,11 +23,14 @@ class AddressBook(UserDict):
             return matches
 
         # Searching by birthday date
-        if (re.match(REGEX_DATE_FORMAT, keyword)
-                or re.match(REGEX_SHORT_DATE_FORMAT, keyword)):
+        if re.match(REGEX_DATE_FORMAT, keyword) or re.match(
+            REGEX_SHORT_DATE_FORMAT, keyword
+        ):
             for record in self.data.values():
-                if (record.birthday is not None and
-                        re.search(keyword, record.birthday.__str__()) is not None):
+                if (
+                    record.birthday is not None
+                    and re.search(keyword, record.birthday.__str__()) is not None
+                ):
                     matches.append(record)
             return matches
 

@@ -1,5 +1,6 @@
 import re
-from .field import Field
+
+from src.models.field import Field
 
 
 def is_valid_phone_regex(phone_number: str) -> bool:
