@@ -1,4 +1,6 @@
 class Field:
+    """Base class for all model fields."""
+
     def __init__(self, value):
         self.value = value
 

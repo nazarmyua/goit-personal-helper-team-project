@@ -5,6 +5,8 @@ from src.constants import DATE_FORMAT
 
 
 class Birthday(Field):
+    """Represents a birthday field in DD.MM.YYYY format."""
+
     @Field.value.setter
     def value(self, value):
         try:

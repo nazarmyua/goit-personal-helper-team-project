@@ -2,6 +2,7 @@ from pathlib import Path
 
 
 def get_absolute_path() -> str:
+    """Get absolute path to address book cache file."""
     user_dir = Path.home()
 
     cache_folder = user_dir / "AddressBookCache"

@@ -2,6 +2,7 @@ from src.utils.logger import error, warning
 
 
 def _handle_key_error(func_name: str, error: KeyError, not_exist_functions: set) -> str:
+    """Generate appropriate error message for KeyError."""
     if func_name in {"edit_note", "remove_note", "add_tags_to_note"} and error.args:
         return str(error)
 
@@ -14,6 +15,7 @@ def _handle_key_error(func_name: str, error: KeyError, not_exist_functions: set)
 def _handle_attribute_error(
     func_name: str, error: AttributeError, not_exist_functions: set
 ) -> str | None:
+    """Generate appropriate error message for AttributeError."""
     if func_name == "show_birthday":
         msg = str(error)
         if "name" in msg:
@@ -28,6 +30,7 @@ def _handle_attribute_error(
 
 
 def input_error(func):
+    """Decorator that handles common input errors and exceptions."""
     messages = {
         "add_contact": "Please provide Name and phone number",
         "add_birthday": "Please provide Name and date in format dd.mm.yyyy",
