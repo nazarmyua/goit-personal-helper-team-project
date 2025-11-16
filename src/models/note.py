@@ -1,5 +1,5 @@
-from .tag import Tag
-from .field import Field
+from src.models.tag import Tag
+from src.models.field import Field
 
 
 class Note(Field):

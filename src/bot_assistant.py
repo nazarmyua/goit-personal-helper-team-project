@@ -1,10 +1,12 @@
 from colorama import Fore, Style, init
-from .models import AddressBook, Record
-from .decorators import input_error
-from .services import absolute_path_provider
-from src.utils.logger import success, info, error, simple_text
+
 import pickle
 from cmd import Cmd
+
+from src.models import AddressBook, Record
+from src.decorators import input_error
+from src.services import absolute_path_provider
+from src.utils.logger import success, info, error, simple_text
 
 CACHE_PATH = absolute_path_provider.get_absolute_path()
 
@@ -187,22 +189,13 @@ def init_address_book() -> AddressBook:
     try:
         with open(CACHE_PATH, "rb") as f:
             return pickle.load(f)
-    except FileNotFoundError or pickle.UnpicklingError:
+    except (FileNotFoundError, pickle.UnpicklingError):
         return AddressBook()
 
 
 def save_data(book):
     with open(CACHE_PATH, "wb") as f:
         pickle.dump(book, f)
-
-
-def load_data():
-    try:
-        with open(CACHE_PATH, "rb") as f:
-            return pickle.load(f)
-    except FileNotFoundError:
-        # Повернення нової адресної книги, якщо файл не знайдено
-        return AddressBook()
 
 
 class BotAssistant(Cmd):

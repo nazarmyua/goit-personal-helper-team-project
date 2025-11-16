@@ -1,8 +1,8 @@
-from .name import Name
-from .phone import Phone
-from .birthday import Birthday
-from .note import Note
-from .email import Email
+from src.models.name import Name
+from src.models.phone import Phone
+from src.models.birthday import Birthday
+from src.models.note import Note
+from src.models.email import Email
 
 
 class Record:
@@ -24,7 +24,7 @@ class Record:
     def remove_phone(self, phone):
         match_phone = self.find_phone(phone)
         if match_phone:
-            self.phones.remove(phone)
+            self.phones.remove(match_phone)
 
     def edit_phone(self, phone, new_phone):
         match_phone = self.find_phone(phone)
@@ -33,6 +33,7 @@ class Record:
             self.phones[index] = Phone(new_phone)
 
     def find_phone(self, target_phone):
+        target_phone = "".join(ch for ch in target_phone if ch.isdigit())
         for phone in self.phones:
             if phone.value == target_phone:
                 return phone

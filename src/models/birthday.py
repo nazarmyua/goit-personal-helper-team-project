@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from .field import Field
+from src.models.field import Field
 from src.constants import DATE_FORMAT
 
 

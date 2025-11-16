@@ -72,6 +72,8 @@ def input_error(func):
             msg = _handle_attribute_error(func.__name__, e, not_exist_functions)
             if msg is not None:
                 return msg
+            else:
+                return f"{error(str(e))}"
 
         except KeyboardInterrupt:
             quit()
