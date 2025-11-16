@@ -6,6 +6,7 @@ EMAIL_REGEX = re.compile(r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$")
 
 
 class Email(Field):
+    """Represents an email address field with validation."""
     @Field.value.setter
     def value(self, value):
         if not isinstance(value, str):

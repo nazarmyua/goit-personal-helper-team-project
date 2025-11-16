@@ -8,16 +8,21 @@ from src.constants import DATE_FORMAT, REGEX_DATE_FORMAT, REGEX_SHORT_DATE_FORMA
 
 
 class AddressBook(UserDict):
+    """Stores and manages contact records."""
+
     def __init__(self):
         super().__init__()
 
     def add_record(self, record: Record):
+        """Add a record to the address book."""
         self.data.update({record.name.value: record})
 
     def find(self, name: str) -> Record | None:
+        """Find a record by contact name."""
         return self.data.get(name, None)
 
     def search(self, keyword: str) -> list[Record]:
+        """Search records by name, phone, or birthday."""
         matches = []
         if keyword == "" or keyword.isspace():
             return matches
@@ -49,11 +54,13 @@ class AddressBook(UserDict):
         return matches
 
     def delete(self, name):
+        """Delete a record by name."""
         target_record = self.find(name)
         if target_record is not None:
             self.data.pop(name)
 
     def get_upcoming_birthdays(self) -> list[dict]:
+        """Get birthdays for the next 7 days."""
         today = date.today()
         birthdays = []
 
@@ -94,6 +101,7 @@ class AddressBook(UserDict):
         return birthdays
 
     def get_records_by_note_keyword(self, keyword: str) -> list[Record]:
+        """Find records by keyword in notes."""
         matches = []
         keyword = keyword.strip()
         if not keyword:

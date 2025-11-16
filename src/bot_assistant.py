@@ -15,6 +15,7 @@ init(autoreset=True)
 
 @input_error
 def add_contact(args, book: AddressBook):
+    """Add a new contact or update existing contact with phone/email."""
     if len(args) < 2:
         raise ValueError(error("Please provide Name and phone number"))
 
@@ -40,6 +41,7 @@ def add_contact(args, book: AddressBook):
 
 @input_error
 def remove_contact(args, book: AddressBook) -> str:
+    """Remove a contact by name."""
     name, *_ = args
     book.delete(name)
     return success("Contact removed: {}".format(name))
@@ -47,6 +49,7 @@ def remove_contact(args, book: AddressBook) -> str:
 
 @input_error
 def change_contact(args, book: AddressBook) -> str:
+    """Edit contact's phone number and/or email."""
     if len(args) < 3:
         raise ValueError(error("Please provide Name, old number and new number"))
 
@@ -67,6 +70,7 @@ def change_contact(args, book: AddressBook) -> str:
 
 @input_error
 def find_contact(args, book: AddressBook) -> str:
+    """Find contacts by name, phone, or birthday."""
     keyword, *_ = args
 
     records = book.search(keyword)
@@ -82,6 +86,7 @@ def find_contact(args, book: AddressBook) -> str:
 
 @input_error
 def find_all_contacts(book: AddressBook) -> str:
+    """Display all contacts in the address book."""
     if len(book) == 0:
         return info("Contacts book is empty")
 
@@ -93,6 +98,7 @@ def find_all_contacts(book: AddressBook) -> str:
 
 @input_error
 def add_birthday(args, book: AddressBook) -> str:
+    """Add a birthday to a contact."""
     name, birthday, *_ = args
     record = book.find(name)
     record.add_birthday(birthday)
@@ -101,6 +107,7 @@ def add_birthday(args, book: AddressBook) -> str:
 
 @input_error
 def show_birthday(args, book: AddressBook) -> str:
+    """Display birthday of a contact."""
     name, *_ = args
     record = book.find(name)
     return simple_text(f"{record.name} - {record.birthday}")
@@ -108,6 +115,7 @@ def show_birthday(args, book: AddressBook) -> str:
 
 @input_error
 def get_upcoming_birthdays(book: AddressBook) -> str:
+    """Display birthdays for the next 7 days."""
     upcoming_birthdays = book.get_upcoming_birthdays()
     to_congratulate = "Next 7 days birthdays:"
     for b_day in upcoming_birthdays:
@@ -118,6 +126,7 @@ def get_upcoming_birthdays(book: AddressBook) -> str:
 
 @input_error
 def add_note(args, book: AddressBook) -> str:
+    """Add a note to a contact."""
     name, *note_parts = args
     note = " ".join(note_parts)
     book.find(name).add_note(note)
@@ -126,6 +135,7 @@ def add_note(args, book: AddressBook) -> str:
 
 @input_error
 def edit_note(args, book: AddressBook) -> str:
+    """Edit an existing note."""
     name, id, *note_parts = args
     new_note = " ".join(note_parts)
     record = book.find(name)
@@ -135,6 +145,7 @@ def edit_note(args, book: AddressBook) -> str:
 
 @input_error
 def remove_note(args, book: AddressBook) -> str:
+    """Remove a note from a contact."""
     name, id, *_ = args
     record = book.find(name)
     record.remove_note(int(id))
@@ -143,6 +154,7 @@ def remove_note(args, book: AddressBook) -> str:
 
 @input_error
 def search_notes(args, book: AddressBook) -> str:
+    """Search notes by keyword across all contacts."""
     keyword, *_ = args
     records = book.get_records_by_note_keyword(keyword)
 
@@ -161,6 +173,7 @@ def search_notes(args, book: AddressBook) -> str:
 
 @input_error
 def add_tags_to_note(args, book: AddressBook) -> str:
+    """Add tags to a note."""
     name, id, *tags = args
     record = book.find(name)
     record.add_tags_to_note(int(id), tags)
@@ -169,6 +182,7 @@ def add_tags_to_note(args, book: AddressBook) -> str:
 
 @input_error
 def remove_tag_from_note(args, book: AddressBook) -> str:
+    """Remove a tag from a note."""
     name, id, tag = args
     record = book.find(name)
     record.remove_tag_from_note(int(id), tag)
@@ -177,6 +191,7 @@ def remove_tag_from_note(args, book: AddressBook) -> str:
 
 @input_error
 def get_notes_by_tag(args, book: AddressBook) -> str:
+    """Find notes by tag."""
     name, tag = args
     record = book.find(name)
     notes_str = record.find_note_by_tag(tag)
@@ -186,6 +201,7 @@ def get_notes_by_tag(args, book: AddressBook) -> str:
 
 
 def init_address_book() -> AddressBook:
+    """Load or create address book from cache."""
     try:
         with open(CACHE_PATH, "rb") as f:
             return pickle.load(f)
@@ -194,6 +210,7 @@ def init_address_book() -> AddressBook:
 
 
 def save_data(book):
+    """Save address book to cache file."""
     with open(CACHE_PATH, "wb") as f:
         pickle.dump(book, f)
 

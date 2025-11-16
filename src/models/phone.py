@@ -4,10 +4,14 @@ from src.models.field import Field
 
 
 def is_valid_phone_regex(phone_number: str) -> bool:
-    #    Simple generic phone validation:
-    #     - Allows optional '+' at the beginning
-    #     - Allows spaces, dashes, dots, parentheses as separators
-    #     - After cleaning, there must be 10–15 digits
+    """Validate phone number format. Allows 10-15 digits with optional separators and leading '+'.
+
+    Args:
+        phone_number: Phone number string to validate.
+
+    Returns:
+        True if valid, False otherwise.
+    """
 
     if not isinstance(phone_number, str):
         return False
@@ -30,6 +34,8 @@ def is_valid_phone_regex(phone_number: str) -> bool:
 
 
 class Phone(Field):
+    """Represents a phone number field with validation."""
+
     @Field.value.setter
     def value(self, phone_raw: str):
         if not isinstance(phone_raw, str):
